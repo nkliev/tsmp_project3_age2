@@ -178,7 +178,12 @@ bool CBaseMonster::useful(const CItemManager *manager, const CGameObject *object
 	if (!movement().restrictions().accessible(object->Position()))
 		return (false);
 
-	if (!movement().restrictions().accessible(object->ai_location().level_vertex_id()))
+	u32 lvid = object->ai_location().level_vertex_id();
+	//Msg("lvid=%d", lvid);
+	if (lvid == 0xffffffff)
+		Msg("INVALID LEVEL VERTEX ID DETECTED. TRYING TO AVOID CRASHING...");
+
+	if (!movement().restrictions().accessible(lvid != 0xffffffff ? lvid : Actor()->ai_location().level_vertex_id()))
 		return false;
 	
 	const CEntityAlive *pCorpse = smart_cast<const CEntityAlive *>(object);
